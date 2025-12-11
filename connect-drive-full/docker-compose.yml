@@ -1,0 +1,146 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: connectdrive-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-connect}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-connectpass}
+      POSTGRES_DB: ${DB_NAME:-connectdrive}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-connect} -d ${DB_NAME:-connectdrive}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - connectdrive-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: connectdrive-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redisdata:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - connectdrive-network
+
+  minio:
+    image: minio/minio:latest
+    container_name: connectdrive-minio
+    restart: unless-stopped
+    command: minio server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD:-minioadmin}
+      MINIO_BROWSER: "on"
+    volumes:
+      - miniodata:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+      - connectdrive-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: connectdrive-backend
+    restart: unless-stopped
+    command: npm run start:${NODE_ENV:-dev}
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      PORT: 3001
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_USER: ${DB_USER:-connect}
+      DATABASE_PASSWORD: ${DB_PASSWORD:-connectpass}
+      DATABASE_NAME: ${DB_NAME:-connectdrive}
+      JWT_SECRET: ${JWT_SECRET:-verysecret_dev_key}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-15m}
+      JWT_REFRESH_EXPIRATION: ${JWT_REFRESH_EXPIRATION:-7d}
+      MINIO_ENDPOINT: minio
+      MINIO_PORT: 9000
+      MINIO_ACCESS_KEY: ${MINIO_USER:-minioadmin}
+      MINIO_SECRET_KEY: ${MINIO_PASSWORD:-minioadmin}
+      MINIO_BUCKET: ${MINIO_BUCKET:-connectdrive}
+      MINIO_USE_SSL: ${MINIO_USE_SSL:-false}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: ${REDIS_DB:-0}
+      STORAGE_QUOTA: ${STORAGE_QUOTA:-5368709120}
+      RECYCLE_RETENTION_DAYS: ${RECYCLE_RETENTION_DAYS:-30}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    volumes:
+      - ./backend/src:/app/src
+    networks:
+      - connectdrive-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3001/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) }).on('error', () => process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3001}
+    container_name: connectdrive-frontend
+    restart: unless-stopped
+    command: npm run dev
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3001}
+      NODE_ENV: ${NODE_ENV:-development}
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend/pages:/app/pages
+      - ./frontend/components:/app/components
+      - ./frontend/contexts:/app/contexts
+      - ./frontend/styles:/app/styles
+    networks:
+      - connectdrive-network
+
+volumes:
+  pgdata:
+    driver: local
+  redisdata:
+    driver: local
+  miniodata:
+    driver: local
+
+networks:
+  connectdrive-network:
+    driver: bridge
