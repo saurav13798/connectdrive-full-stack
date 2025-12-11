@@ -2,7 +2,7 @@
 import { Queue, Worker } from 'bullmq';
 import IORedis from 'ioredis';
 
-const connection = new IORedis({ host: process.env.REDIS_HOST || '127.0.0.1' });
+const connection = new IORedis({ host: process.env['REDIS_HOST'] || '127.0.0.1' });
 
 const queue = new Queue('processing', { connection });
 

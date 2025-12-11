@@ -55,7 +55,9 @@ export class AppErrorClass extends Error implements AppError {
     this.recoverable = recoverable;
     this.retryable = retryable;
     this.userFriendly = userFriendly;
-    this.context = context;
+    if (context) {
+      this.context = context;
+    }
     this.timestamp = new Date().toISOString();
     this.id = `err_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     

@@ -28,6 +28,7 @@ export class ErrorBoundary extends Component<Props, State> {
           error.message || 'A component error occurred',
           true,
           false,
+          true,
           { originalError: error }
         );
 

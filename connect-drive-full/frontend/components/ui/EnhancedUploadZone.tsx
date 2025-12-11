@@ -89,7 +89,7 @@ export default function EnhancedUploadZone({
         file,
         progress: 0,
         status: error ? 'error' : 'pending',
-        error: error || undefined
+        ...(error && { error })
       };
       
       newUploadFiles.push(uploadFile);

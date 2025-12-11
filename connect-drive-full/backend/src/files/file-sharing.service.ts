@@ -50,9 +50,9 @@ export class FileSharingService {
       createdBy,
       token,
       permission,
-      password: hashedPassword,
-      expiresAt,
-      maxAccess,
+      ...(hashedPassword && { password: hashedPassword }),
+      ...(expiresAt && { expiresAt }),
+      ...(maxAccess && { maxAccess }),
     });
 
     return this.shareLinkRepository.save(shareLink);

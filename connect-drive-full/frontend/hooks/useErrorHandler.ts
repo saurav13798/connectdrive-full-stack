@@ -21,6 +21,7 @@ export function useErrorHandler(options: UseErrorHandlerOptions = {}) {
         'An unexpected error occurred',
         false,
         false,
+        true,
         { originalError: error }
       );
     }

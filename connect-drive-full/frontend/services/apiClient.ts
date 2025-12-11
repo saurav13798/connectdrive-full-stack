@@ -80,7 +80,8 @@ class ApiClient {
         'NO_REFRESH_TOKEN',
         'No refresh token available',
         false,
-        false
+        false,
+        true
       );
     }
 
@@ -104,6 +105,7 @@ class ApiClient {
         'Failed to refresh authentication token',
         false,
         false,
+        true,
         { originalError: error }
       );
     }

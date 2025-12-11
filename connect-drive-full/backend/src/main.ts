@@ -36,7 +36,7 @@ async function bootstrap() {
 
   app.use(bodyParser.json({ limit: '100mb' }));
   app.enableCors({ origin: true });
-  const port = process.env.PORT || process.env.APP_PORT || 3001;
+  const port = process.env['PORT'] || process.env['APP_PORT'] || 3001;
   await app.listen(port);
   console.log(`Backend listening on http://localhost:${port}`);
 }

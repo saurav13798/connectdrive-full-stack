@@ -70,7 +70,7 @@ export default function SearchBar({
     inputRef.current?.blur();
   };
 
-  const handleKeyDown = (e: React.KeyEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
       setIsOpen(false);
       inputRef.current?.blur();

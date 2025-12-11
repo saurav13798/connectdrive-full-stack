@@ -11,32 +11,32 @@ import { OrganizationMember } from './organization-member.entity';
 @Entity('organizations')
 export class Organization {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column()
-  name: string;
+  name!: string;
 
   @Column({ nullable: true })
-  description: string;
+  description!: string;
 
   @Column()
-  ownerId: string;
+  ownerId!: string;
 
   @Column({ default: 'active' })
-  status: string;
+  status!: string;
 
   @Column({ type: 'bigint', default: 107374182400 }) // 100GB default
-  storageQuota: number;
+  storageQuota!: number;
 
   @Column({ type: 'bigint', default: 0 })
-  storageUsed: number;
+  storageUsed!: number;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 
   @OneToMany(() => OrganizationMember, member => member.organization)
-  members: OrganizationMember[];
+  members!: OrganizationMember[];
 }

@@ -8,7 +8,6 @@ import {
   ArrowDownTrayIcon,
   ShareIcon,
   InformationCircleIcon,
-  EyeIcon,
   DocumentIcon,
   PhotoIcon,
   VideoCameraIcon,
@@ -38,7 +37,7 @@ export default function FileViewer({ file }: FileViewerProps) {
   const [showMetadata, setShowMetadata] = useState(false);
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const controlsTimeoutRef = useRef<NodeJS.Timeout>();
+  const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 

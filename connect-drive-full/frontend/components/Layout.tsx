@@ -159,7 +159,7 @@ export default function Layout({ children }: LayoutProps) {
               </div>
             )}
             <div className="space-y-1">
-              {navigationItems.map((item, index) => (
+              {navigationItems.map((item) => (
                 <Link 
                   key={item.name} 
                   href={item.path} 
@@ -198,7 +198,7 @@ export default function Layout({ children }: LayoutProps) {
                   </div>
                 )}
                 <div className="space-y-1">
-                  {secondaryItems.map((item, index) => (
+                  {secondaryItems.map((item) => (
                     <Link 
                       key={item.name} 
                       href={item.path} 

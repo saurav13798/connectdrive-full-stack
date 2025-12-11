@@ -20,37 +20,37 @@ export enum MemberRole {
 @Entity('organization_members')
 export class OrganizationMember {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column()
-  organizationId: string;
+  organizationId!: string;
 
   @Column()
-  userId: string;
+  userId!: string;
 
   @Column({
     type: 'varchar',
     default: MemberRole.MEMBER,
   })
-  role: MemberRole;
+  role!: MemberRole;
 
   @Column({ default: 'active' })
-  status: string;
+  status!: string;
 
   @Column({ nullable: true })
-  invitedBy: string;
+  invitedBy!: string;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 
   @ManyToOne(() => Organization, organization => organization.members)
   @JoinColumn({ name: 'organizationId' })
-  organization: Organization;
+  organization!: Organization;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'userId' })
-  user: User;
+  user!: User;
 }

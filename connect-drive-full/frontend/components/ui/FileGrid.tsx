@@ -50,7 +50,7 @@ export default function FileGrid({
     });
   };
 
-  const getFileIcon = (mimeType: string, filename: string) => {
+  const getFileIcon = (mimeType: string, _filename: string) => {
     const iconClasses = "w-3 h-3 text-white";
     
     if (mimeType.startsWith('image/')) {

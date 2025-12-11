@@ -16,7 +16,7 @@ import { MockDownloadController } from './mock-download.controller';
     {
       provide: 'STORAGE_SERVICE',
       useFactory: (minioService: MinioService, mockMinioService: MockMinioService) => {
-        return process.env.NODE_ENV === 'production' ? minioService : mockMinioService;
+        return process.env['NODE_ENV'] === 'production' ? minioService : mockMinioService;
       },
       inject: [MinioService, MockMinioService],
     },

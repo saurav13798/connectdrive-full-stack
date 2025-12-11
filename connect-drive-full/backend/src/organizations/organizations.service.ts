@@ -19,8 +19,8 @@ export class OrganizationsService {
   async create(ownerId: string, name: string, description?: string): Promise<Organization> {
     const organization = this.organizationRepository.create({
       name,
-      description,
       ownerId,
+      ...(description && { description }),
     });
 
     const savedOrg = await this.organizationRepository.save(organization);

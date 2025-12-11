@@ -13,7 +13,7 @@ class ErrorMonitoringService {
   private isEnabled: boolean;
   private endpoint: string;
   private sessionId: string;
-  private userId?: string;
+  private userId: string | undefined;
 
   constructor() {
     this.isEnabled = process.env.NODE_ENV === 'production';
@@ -40,22 +40,22 @@ class ErrorMonitoringService {
     }
 
     try {
+      // Update error context with additional metadata
+      error.context = {
+        ...error.context,
+        ...additionalMetadata,
+        sessionId: this.sessionId,
+        ...(this.userId && { userId: this.userId }),
+        ...(process.env.NEXT_PUBLIC_BUILD_VERSION && { buildVersion: process.env.NEXT_PUBLIC_BUILD_VERSION }),
+      };
+
       const report: ErrorReport = {
-        error: {
-          ...error,
-          context: {
-            ...error.context,
-            ...additionalMetadata,
-            userId: this.userId,
-            sessionId: this.sessionId,
-            buildVersion: process.env.NEXT_PUBLIC_BUILD_VERSION,
-          },
-        } as AppErrorClass,
+        error,
         userAgent: navigator.userAgent,
         url: window.location.href,
-        userId: this.userId,
         sessionId: this.sessionId,
-        buildVersion: process.env.NEXT_PUBLIC_BUILD_VERSION,
+        ...(this.userId && { userId: this.userId }),
+        ...(process.env.NEXT_PUBLIC_BUILD_VERSION && { buildVersion: process.env.NEXT_PUBLIC_BUILD_VERSION }),
       };
 
       // Send error report to monitoring service

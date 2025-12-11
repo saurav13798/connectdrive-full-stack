@@ -149,7 +149,7 @@ export function Navigation({
           <Link
             href={item.href}
             className={itemClasses}
-            onClick={onItemClick}
+            {...(onItemClick && { onClick: onItemClick })}
             aria-current={active ? 'page' : undefined}
           >
             <span className="nav-item-content">

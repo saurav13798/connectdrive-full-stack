@@ -159,7 +159,7 @@ export function GetStartedCTA({ className, ...props }: Omit<CTAProps, 'children'
     <CallToAction
       variant="primary"
       size="lg"
-      className={className}
+      className={className || ''}
       icon={
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -179,7 +179,7 @@ export function UploadFilesCTA({ className, ...props }: Omit<CTAProps, 'children
     <CallToAction
       variant="primary"
       size="md"
-      className={className}
+      className={className || ''}
       icon={
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
@@ -198,7 +198,7 @@ export function LearnMoreCTA({ className, ...props }: Omit<CTAProps, 'children'>
     <CallToAction
       variant="outline"
       size="md"
-      className={className}
+      className={className || ''}
       icon={
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -217,7 +217,7 @@ export function ContactSalesCTA({ className, ...props }: Omit<CTAProps, 'childre
     <CallToAction
       variant="secondary"
       size="md"
-      className={className}
+      className={className || ''}
       icon={
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
